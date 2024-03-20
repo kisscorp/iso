@@ -1,0 +1,6 @@
+version: '3'
+services:
+  my-python-service:
+    build:
+      context: .
+      dockerfile: Dockerfile

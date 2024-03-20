@@ -1,30 +1,40 @@
 import * as vscode from 'vscode';
 import * as path from 'path';
 
-let timeout: NodeJS.Timeout | undefined = undefined;
-let changedFiles: Set<string> = new Set();
+const runDockerComposeTask = () => {
+    const type: string = 'shell';
+    const command: string = 'docker-compose up my-python-service';
+    const problemMatcher: string[] = [];
+    const executionOptions: vscode.ShellExecutionOptions = { cwd: path.dirname(__dirname) };
+    const dockerTask: vscode.Task = new vscode.Task({ type: type }, vscode.TaskScope.Workspace, 'docker-up', 'extension-source', new vscode.ShellExecution(command, executionOptions), problemMatcher);
+
+    vscode.tasks.executeTask(dockerTask).then(() => {
+        vscode.window.showInformationMessage('Docker container finished executing!');
+    });
+};
+
+const debounce = (func: () => void, delay: number) => {
+    let timeoutId: NodeJS.Timeout | undefined;
+    return () => {
+        if (timeoutId) {
+            clearTimeout(timeoutId);
+        }
+        timeoutId = setTimeout(func, delay);
+    };
+};
+
+const debouncedRunDockerComposeTask = debounce(runDockerComposeTask, 10000);
 
 export function activate(context: vscode.ExtensionContext) {
-		vscode.window.showInformationMessage('Congratulations, your extension "ch24-test-ext" is now active!');
+    vscode.window.showInformationMessage('Congratulations, your extension "ch24-test-ext" is now active!');
 
-    const watcher = vscode.workspace.createFileSystemWatcher('**', false, false, false);
+    const watcher: vscode.FileSystemWatcher = vscode.workspace.createFileSystemWatcher('**', false, false, false);
 
-    watcher.onDidChange(e => {
-        changedFiles.add(path.basename(e.fsPath));
-
-        if (timeout) {
-            clearTimeout(timeout);
-        }
-
-        timeout = setTimeout(() => {
-						vscode.window.showInformationMessage(`Files changed in the last 10 seconds: ${Array.from(changedFiles).join(", ")}`);
-            changedFiles.clear();
-        }, 10000);
-    });
+    watcher.onDidChange(debouncedRunDockerComposeTask);
 
     context.subscriptions.push(watcher);
 
-    let disposable = vscode.commands.registerCommand('ch24-test-ext.helloWorld', () => {
+    const disposable: vscode.Disposable = vscode.commands.registerCommand('ch24-test-ext.helloWorld', () => {
         vscode.window.showInformationMessage('Hello World from ch24-test-ext!');
     });
 
