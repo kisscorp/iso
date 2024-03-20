@@ -2,7 +2,7 @@
   "name": "ch24-test-ext",
   "displayName": "ch24-test-ext",
   "description": "",
-  "version": "0.0.13",
+  "version": "0.0.14",
   "engines": {
     "vscode": "^1.87.0"
   },

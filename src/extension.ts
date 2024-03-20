@@ -2,15 +2,15 @@ import * as vscode from 'vscode';
 import * as path from 'path';
 
 const runDockerComposeTask = () => {
-    const type: string = 'shell';
-    const command: string = 'docker-compose up my-python-service';
-    const problemMatcher: string[] = [];
-    const executionOptions: vscode.ShellExecutionOptions = { cwd: path.dirname(__dirname) };
-    const dockerTask: vscode.Task = new vscode.Task({ type: type }, vscode.TaskScope.Workspace, 'docker-up', 'extension-source', new vscode.ShellExecution(command, executionOptions), problemMatcher);
+	const type: string = 'shell';
+	const command: string = 'docker-compose up my-python-service';
+	const problemMatcher: string[] = [];
+	const executionOptions: vscode.ShellExecutionOptions = { cwd: __dirname };
+	const dockerTask: vscode.Task = new vscode.Task({ type: type }, vscode.TaskScope.Workspace, 'docker-up', 'extension-source', new vscode.ShellExecution(command, executionOptions), problemMatcher);
 
-    vscode.tasks.executeTask(dockerTask).then(() => {
-        vscode.window.showInformationMessage('Docker container finished executing!');
-    });
+	vscode.tasks.executeTask(dockerTask).then(() => {
+			vscode.window.showInformationMessage('Docker container finished executing!');
+	});
 };
 
 const debounce = (func: () => void, delay: number) => {
