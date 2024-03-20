@@ -4,3 +4,13 @@ services:
     build:
       context: .
       dockerfile: Dockerfile
+  my-csharp-service:
+    build: 
+      context: .
+      dockerfile: Dockerfile.csharp
+    volumes:
+      - .:/app
+  my-python-service2:
+    build:
+      context: .
+      dockerfile: Dockerfile2

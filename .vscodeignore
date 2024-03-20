@@ -6,6 +6,8 @@
 
 # Include Dockerfile in root
 !Dockerfile
+!Dockerfile.csharp
+!Dockerfile2
 
 # Include docker-compose.yml
 !docker-compose.yml

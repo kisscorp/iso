@@ -1,0 +1,23 @@
+# Use Microsoft's official build .NET image.
+FROM mcr.microsoft.com/dotnet/sdk:5.0 AS build-env
+WORKDIR /app
+
+# Create a new console application
+RUN dotnet new console -n ConsoleApp
+
+WORKDIR /app/ConsoleApp
+
+# Overwrite the Program.cs
+RUN echo 'using System; namespace ConsoleApp { class Program { static void Main(string[] args) { Console.WriteLine("Hello, World!"); } } }' > Program.cs
+
+# Build the application
+RUN dotnet publish --configuration Release --output ./out
+
+# Start a new stage to build the final image
+FROM mcr.microsoft.com/dotnet/runtime:5.0
+
+WORKDIR /app
+COPY --from=build-env /app/ConsoleApp/out .
+
+# Start the app
+CMD ["dotnet", "ConsoleApp.dll"]
