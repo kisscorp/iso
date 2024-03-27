@@ -6,7 +6,7 @@ const outputChannel = vscode.window.createOutputChannel('Docker Logs');
 
 const runDockerComposeTask = () => {
 	const type: string = 'shell';
-	const command: string = 'docker-compose up -d my-python-service my-python-service2';
+	const command: string = 'docker-compose up my-python-service my-python-service2';
 	const problemMatcher: string[] = [];
 	const executionOptions: vscode.ShellExecutionOptions = { cwd: __dirname };
 	const dockerTask: vscode.Task = new vscode.Task({ type: type }, vscode.TaskScope.Workspace, 'docker-up', 'extension-source', new vscode.ShellExecution(command, executionOptions), problemMatcher);
@@ -22,11 +22,16 @@ const runDockerComposeTask = () => {
 
 const printDockerLogs = (serviceName: string) => {
 	exec(`docker-compose -f ${path.join(__dirname, '..', 'docker-compose.yml')} logs ${serviceName}`, (error, stdout, stderr) => {
-			if (error) {
-					outputChannel.appendLine(`exec error: ${error}`);
-					return;
-			}
-			outputChannel.appendLine(`Docker logs for ${serviceName}: ${stdout}`);
+		if (error) {
+			outputChannel.appendLine(`exec error: ${error}`);
+			return;
+		}
+		outputChannel.appendLine(`Service ${serviceName} stdout: ${stdout}`);
+		if (stdout.includes("Application completed successfully")) {
+			outputChannel.appendLine(`Service ${serviceName} completed successfully`);
+		} else {
+			outputChannel.appendLine(`Service ${serviceName} failed to complete successfully`);
+		}
 	});
 };
 
