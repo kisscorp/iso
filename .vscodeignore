@@ -8,6 +8,7 @@
 !Dockerfile
 !Dockerfile.csharp
 !Dockerfile2
+!RadonDockerfile
 
 # Include docker-compose.yml
 !docker-compose.yml

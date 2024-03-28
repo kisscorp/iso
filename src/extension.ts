@@ -6,7 +6,7 @@ const outputChannel = vscode.window.createOutputChannel('Docker Logs');
 
 const runDockerComposeTask = () => {
 	const type: string = 'shell';
-	const command: string = 'docker-compose up my-python-service my-python-service2';
+	const command: string = 'docker-compose up my-python-service my-python-service2 my-iso-radon-service';
 	const problemMatcher: string[] = [];
 	const executionOptions: vscode.ShellExecutionOptions = { cwd: __dirname };
 	const dockerTask: vscode.Task = new vscode.Task({ type: type }, vscode.TaskScope.Workspace, 'docker-up', 'extension-source', new vscode.ShellExecution(command, executionOptions), problemMatcher);
@@ -15,8 +15,10 @@ const runDockerComposeTask = () => {
 			vscode.window.showInformationMessage('Docker container finished executing!');
 			printDockerLogs('my-python-service');
 			printDockerLogs('my-python-service2');
+			printDockerLogs('my-iso-radon-service');
 			printContainerStatus('my-python-service');
 			printContainerStatus('my-python-service2');
+			printContainerStatus('my-iso-radon-service');
 	});
 };
 

@@ -2,7 +2,7 @@
   "name": "ch24-test-ext",
   "displayName": "ch24-test-ext",
   "description": "",
-  "version": "0.0.35",
+  "version": "0.0.43",
   "engines": {
     "vscode": "^1.87.0"
   },
@@ -21,7 +21,7 @@
     ]
   },
   "scripts": {
-    "vscode:prepublish": "npm run package",
+    "vscode:prepublish": "npm run copy-radon-dockerfile && npm run package",
     "compile": "webpack",
     "watch": "webpack --watch",
     "package": "webpack --mode production --devtool hidden-source-map",
@@ -29,7 +29,8 @@
     "watch-tests": "tsc -p . -w --outDir out",
     "pretest": "npm run compile-tests && npm run compile && npm run lint",
     "lint": "eslint src --ext ts",
-    "test": "vscode-test"
+    "test": "vscode-test",
+    "copy-radon-dockerfile": "cp node_modules/@grnsft/if-unofficial-plugins/build/lib/iso-radon/RadonDockerfile ./"
   },
   "devDependencies": {
     "@types/vscode": "^1.87.0",
@@ -43,6 +44,7 @@
     "webpack": "^5.90.3",
     "webpack-cli": "^5.1.4",
     "@vscode/test-cli": "^0.0.6",
-    "@vscode/test-electron": "^2.3.9"
+    "@vscode/test-electron": "^2.3.9",
+    "@grnsft/if-unofficial-plugins": "0.3.0-alpha.5"
   }
 }

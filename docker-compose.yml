@@ -14,3 +14,7 @@ services:
     build:
       context: .
       dockerfile: Dockerfile2
+  my-iso-radon-service:
+    build:
+      context: .
+      dockerfile: RadonDockerfile
