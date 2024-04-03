@@ -1,15 +1,14 @@
 {
   "name": "ch24-test-ext",
-  "displayName": "ch24-test-ext",
-  "description": "",
-  "version": "0.0.43",
+  "displayName": "iso",
+  "description": "A VS Code extension promoting sustainable coding practices by helping developers create efficient, secure, and less wasteful code.",
+  "tags": ["sustainability", "climate-awareness", "eco-friendly", "green-coding", "waste-reduction"],
+  "version": "0.0.59",
   "engines": {
     "vscode": "^1.87.0"
   },
   "publisher": "KISS",
-  "categories": [
-    "Other"
-  ],
+  "categories": ["Programming Languages", "Linters", "Debuggers", "Formatters", "Other"],
   "activationEvents": [],
   "main": "./dist/extension.js",
   "contributes": {
@@ -21,7 +20,7 @@
     ]
   },
   "scripts": {
-    "vscode:prepublish": "npm run copy-radon-dockerfile && npm run package",
+    "vscode:prepublish": "npm run package && npm run copy-radon-dockerfile && npm run copy-radon-run",
     "compile": "webpack",
     "watch": "webpack --watch",
     "package": "webpack --mode production --devtool hidden-source-map",
@@ -30,7 +29,8 @@
     "pretest": "npm run compile-tests && npm run compile && npm run lint",
     "lint": "eslint src --ext ts",
     "test": "vscode-test",
-    "copy-radon-dockerfile": "cp node_modules/@grnsft/if-unofficial-plugins/build/lib/iso-radon/RadonDockerfile ./"
+    "copy-radon-dockerfile": "cp node_modules/@grnsft/if-unofficial-plugins/build/lib/iso-radon/RadonDockerfile ./",
+    "copy-radon-run": "cp node_modules/@grnsft/if-unofficial-plugins/build/lib/iso-radon/radon_run.sh ./"
   },
   "devDependencies": {
     "@types/vscode": "^1.87.0",
@@ -45,6 +45,7 @@
     "webpack-cli": "^5.1.4",
     "@vscode/test-cli": "^0.0.6",
     "@vscode/test-electron": "^2.3.9",
-    "@grnsft/if-unofficial-plugins": "0.3.0-alpha.5"
-  }
+    "@grnsft/if-unofficial-plugins": "0.3.0-alpha.11"
+  },
+  "icon": "identity.png"
 }

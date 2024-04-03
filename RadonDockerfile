@@ -10,11 +10,14 @@ ADD . /app
 # Install Radon
 RUN pip install radon
 
-# Create a simple Python script that prints "Hello, World!", "Application completed successfully", and then waits for 10 seconds
-RUN echo 'import time\nprint("Hello, World!")\nprint("Application completed successfully")\ntime.sleep(10)' > hello.py
+# Create a simple Python script that includes a function
+RUN echo 'import time\n\ndef greet_and_sleep():\n    print("Hello, World!")\n    print("Application completed successfully")\n    time.sleep(10)\n\ngreet_and_sleep()' > hello.py
 
-# Run Radon on the created Python script and write to stdout
-RUN radon cc /app/hello.py -nc
+# Copy the shell script to the Docker image
+COPY radon_run.sh /app/run.sh
 
-# Run hello.py when the container launches
-CMD ["python", "hello.py"]
+# Make the shell script executable
+RUN chmod +x /app/run.sh
+
+# Run the shell script when the container launches
+CMD ["/app/run.sh"]

@@ -29,6 +29,7 @@ const printDockerLogs = (serviceName: string) => {
 			return;
 		}
 		outputChannel.appendLine(`Service ${serviceName} stdout: ${stdout}`);
+		outputChannel.appendLine(`Service ${serviceName} stderr: ${stderr}`);
 		if (stdout.includes("Application completed successfully")) {
 			outputChannel.appendLine(`Service ${serviceName} completed successfully`);
 		} else {
