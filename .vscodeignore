@@ -18,15 +18,3 @@
 
 # Include src directory
 !src/
-
-# Run files
-*_run.sh
-
-# Copied docker files
-Dockerfile
-Dockerfile.csharp
-Dockerfile2
-RadonDockerfile
-CpdDockerfile
-BanditDockerfile
-PylintDockerfile
