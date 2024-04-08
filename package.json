@@ -2,25 +2,41 @@
   "name": "ch24-test-ext",
   "displayName": "iso",
   "description": "A VS Code extension promoting sustainable coding practices by helping developers create efficient, secure, and less wasteful code.",
-  "tags": ["sustainability", "climate-awareness", "eco-friendly", "green-coding", "waste-reduction"],
-  "version": "0.0.59",
+  "tags": [
+    "sustainability",
+    "climate-awareness",
+    "eco-friendly",
+    "green-coding",
+    "waste-reduction"
+  ],
+  "version": "0.0.97",
   "engines": {
     "vscode": "^1.87.0"
   },
   "publisher": "KISS",
-  "categories": ["Programming Languages", "Linters", "Debuggers", "Formatters", "Other"],
+  "categories": [
+    "Programming Languages",
+    "Linters",
+    "Debuggers",
+    "Formatters",
+    "Other"
+  ],
   "activationEvents": [],
   "main": "./dist/extension.js",
   "contributes": {
     "commands": [
       {
         "command": "ch24-test-ext.helloWorld",
-        "title": "Hello World"
+        "title": "iso > wasteless <"
       }
     ]
   },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/kisscorp/iso.git"
+  },
   "scripts": {
-    "vscode:prepublish": "npm run package && npm run copy-radon-dockerfile && npm run copy-radon-run",
+    "vscode:prepublish": "npm run package && npm run copy-radon-dockerfile && npm run copy-radon-run && npm run copy-cpd-dockerfile && npm run copy-cpd-run && npm run copy-pylint-dockerfile && npm run copy-pylint-run && npm run copy-bandit-dockerfile && npm run copy-bandit-run",
     "compile": "webpack",
     "watch": "webpack --watch",
     "package": "webpack --mode production --devtool hidden-source-map",
@@ -30,22 +46,28 @@
     "lint": "eslint src --ext ts",
     "test": "vscode-test",
     "copy-radon-dockerfile": "cp node_modules/@grnsft/if-unofficial-plugins/build/lib/iso-radon/RadonDockerfile ./",
-    "copy-radon-run": "cp node_modules/@grnsft/if-unofficial-plugins/build/lib/iso-radon/radon_run.sh ./"
+    "copy-radon-run": "cp node_modules/@grnsft/if-unofficial-plugins/build/lib/iso-radon/radon_run.sh ./",
+    "copy-cpd-dockerfile": "cp node_modules/@grnsft/if-unofficial-plugins/build/lib/iso-cpd/CpdDockerfile ./",
+    "copy-cpd-run": "cp node_modules/@grnsft/if-unofficial-plugins/build/lib/iso-cpd/cpd_run.sh ./",
+    "copy-pylint-dockerfile": "cp node_modules/@grnsft/if-unofficial-plugins/build/lib/iso-pylint/PylintDockerfile ./",
+    "copy-pylint-run": "cp node_modules/@grnsft/if-unofficial-plugins/build/lib/iso-pylint/pylint_run.sh ./",
+    "copy-bandit-dockerfile": "cp node_modules/@grnsft/if-unofficial-plugins/build/lib/iso-bandit/BanditDockerfile ./",
+    "copy-bandit-run": "cp node_modules/@grnsft/if-unofficial-plugins/build/lib/iso-bandit/bandit_run.sh ./"
   },
   "devDependencies": {
-    "@types/vscode": "^1.87.0",
+    "@grnsft/if-unofficial-plugins": "0.3.0-alpha.31",
     "@types/mocha": "^10.0.6",
     "@types/node": "18.x",
+    "@types/vscode": "^1.87.0",
     "@typescript-eslint/eslint-plugin": "^7.0.2",
     "@typescript-eslint/parser": "^7.0.2",
-    "eslint": "^8.56.0",
-    "typescript": "^5.3.3",
-    "ts-loader": "^9.5.1",
-    "webpack": "^5.90.3",
-    "webpack-cli": "^5.1.4",
     "@vscode/test-cli": "^0.0.6",
     "@vscode/test-electron": "^2.3.9",
-    "@grnsft/if-unofficial-plugins": "0.3.0-alpha.11"
+    "eslint": "^8.56.0",
+    "ts-loader": "^9.5.1",
+    "typescript": "^5.3.3",
+    "webpack": "^5.90.3",
+    "webpack-cli": "^5.1.4"
   },
   "icon": "identity.png"
 }

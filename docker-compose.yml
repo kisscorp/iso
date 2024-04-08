@@ -9,7 +9,7 @@ services:
       context: .
       dockerfile: Dockerfile.csharp
     volumes:
-      - .:/app
+      - ${WORKSPACE_PATH}:/app
   my-python-service2:
     build:
       context: .
@@ -18,3 +18,23 @@ services:
     build:
       context: .
       dockerfile: RadonDockerfile
+    volumes:
+      - ${WORKSPACE_PATH}:/app
+  my-iso-cpd-service:
+    build:
+      context: .
+      dockerfile: CpdDockerfile
+    volumes:
+      - ${WORKSPACE_PATH}:/app
+  my-iso-bandit-service:
+    build:
+      context: .
+      dockerfile: BanditDockerfile
+    volumes:
+      - ${WORKSPACE_PATH}:/app
+  my-iso-pylint-service:
+    build:
+      context: .
+      dockerfile: PylintDockerfile
+    volumes:
+      - ${WORKSPACE_PATH}:/app
