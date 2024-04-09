@@ -56,12 +56,15 @@ const printDockerLogs = (serviceName: string) => {
 		if (serviceName === 'my-iso-radon-service') {
 			const score = calculateRadonScore(stdout);
 			outputChannel.appendLine(`Simplicity score: ${score}`);
+			vscode.window.showInformationMessage(`Simplicity score: ${score}`);
 		} else if (serviceName === 'my-iso-cpd-service') {
 			const score = calculateCpdScore(stdout);
 			outputChannel.appendLine(`Duplication score: ${score}`);
+			vscode.window.showInformationMessage(`Duplication score: ${score}`);
 		} else if (serviceName === 'my-iso-bandit-service') {
 			const score = calculateBanditScore(stdout);
 			outputChannel.appendLine(`Security score: ${score}`);
+			vscode.window.showInformationMessage(`Security score: ${score}`);
 		} else {
 			outputChannel.appendLine(`Service ${serviceName} stdout: ${stdout}`);
 			// outputChannel.appendLine(`Service ${serviceName} stderr: ${stderr}`);
