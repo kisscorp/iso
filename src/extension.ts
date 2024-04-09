@@ -43,6 +43,9 @@ const runDockerComposeTask = () => {
 			printContainerStatus('my-iso-radon-service');
 			printContainerStatus('my-iso-cpd-service');
 			printContainerStatus('my-iso-bandit-service');
+
+			// New code: calculate and print the aggregated score
+			calculateAndPrintAggregateScore();
 	});
 };
 
@@ -56,15 +59,15 @@ const printDockerLogs = (serviceName: string) => {
 		if (serviceName === 'my-iso-radon-service') {
 			const score = calculateRadonScore(stdout);
 			outputChannel.appendLine(`Simplicity score: ${score}`);
-			vscode.window.showInformationMessage(`Simplicity score: ${score}`);
+			// vscode.window.showInformationMessage(`Simplicity score: ${score}`);
 		} else if (serviceName === 'my-iso-cpd-service') {
 			const score = calculateCpdScore(stdout);
 			outputChannel.appendLine(`Duplication score: ${score}`);
-			vscode.window.showInformationMessage(`Duplication score: ${score}`);
+			// vscode.window.showInformationMessage(`Duplication score: ${score}`);
 		} else if (serviceName === 'my-iso-bandit-service') {
 			const score = calculateBanditScore(stdout);
 			outputChannel.appendLine(`Security score: ${score}`);
-			vscode.window.showInformationMessage(`Security score: ${score}`);
+			// vscode.window.showInformationMessage(`Security score: ${score}`);
 		} else {
 			outputChannel.appendLine(`Service ${serviceName} stdout: ${stdout}`);
 			// outputChannel.appendLine(`Service ${serviceName} stderr: ${stderr}`);
@@ -208,6 +211,46 @@ const calculateBanditScore = (output: string): number => {
 	}
 
 	return sustainabilityScore;
-}
+};
+
+const calculateAndPrintAggregateScore = () => {
+	let aggregateScore = 0;
+	let serviceCount = 0;
+
+	const services = [
+			// 'my-python-service',
+			// 'my-python-service2',
+			'my-iso-radon-service',
+			'my-iso-cpd-service',
+			'my-iso-bandit-service'
+	];
+
+	services.forEach(serviceName => {
+			exec(`docker-compose -f ${path.join(__dirname, '..', 'docker-compose.yml')} logs ${serviceName}`, (error, stdout, stderr) => {
+					if (error) {
+							outputChannel.appendLine(`exec error: ${error}`);
+							return;
+					}
+
+					let score = 0;
+					if (serviceName === 'my-iso-radon-service') {
+							score = calculateRadonScore(stdout);
+					} else if (serviceName === 'my-iso-cpd-service') {
+							score = calculateCpdScore(stdout);
+					} else if (serviceName === 'my-iso-bandit-service') {
+							score = calculateBanditScore(stdout);
+					}
+
+					aggregateScore += score;
+					serviceCount++;
+
+					if (serviceCount === services.length) {
+						const sustainabilityScore = aggregateScore / services.length;
+						outputChannel.appendLine(`Sustainability score: ${sustainabilityScore}`);
+						vscode.window.showInformationMessage(`Sustainability score: ${sustainabilityScore}`);
+					}
+			});
+	});
+};
 
 export function deactivate() {}
