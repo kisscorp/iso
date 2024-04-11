@@ -121,42 +121,50 @@ export function activate(context: vscode.ExtensionContext) {
 }
 
 const calculateAndPrintAggregateScore = () => {
-	let aggregateScore = 0;
-	let serviceCount = 0;
 
-	const services = [
-			// 'my-python-service',
-			// 'my-python-service2',
+	const services: string[] = [
 			'my-iso-radon-service',
 			'my-iso-cpd-service',
 			'my-iso-bandit-service'
 	];
 
-	services.forEach(serviceName => {
-			exec(`docker-compose -f ${path.join(__dirname, '..', 'docker-compose.yml')} logs ${serviceName}`, (error, stdout, stderr) => {
-					if (error) {
-							outputChannel.appendLine(`exec error: ${error}`);
-							return;
-					}
+	// Map each service to a Promise
+	const servicePromises: Promise<number>[] = services.map((serviceName: string) => {
+			return new Promise<number>((resolve, reject) => {
+					exec(`docker-compose -f ${path.join(__dirname, '..', 'docker-compose.yml')} logs ${serviceName}`, (error: Error | null, stdout: string, stderr: string) => {
+							if (error) {
+									outputChannel.appendLine(`exec error: ${error}`);
+									reject(error);
+									return;
+							}
 
-					let score = 0;
-					if (serviceName === 'my-iso-radon-service') {
-							score = calculateRadonScore(stdout);
-					} else if (serviceName === 'my-iso-cpd-service') {
-							score = calculateCpdScore(stdout);
-					} else if (serviceName === 'my-iso-bandit-service') {
-							score = calculateBanditScore(stdout);
-					}
+							let score: number = 0;
+							if (serviceName === 'my-iso-radon-service') {
+									score = calculateRadonScore(stdout);
+							} else if (serviceName === 'my-iso-cpd-service') {
+									score = calculateCpdScore(stdout);
+							} else if (serviceName === 'my-iso-bandit-service') {
+									score = calculateBanditScore(stdout);
+							}
 
-					aggregateScore += score;
-					serviceCount++;
-
-					if (serviceCount === services.length) {
-						const sustainabilityScore = aggregateScore / services.length;
-						outputChannel.appendLine(`Sustainability score: ${sustainabilityScore}`);
-						vscode.window.showInformationMessage(`Sustainability score: ${sustainabilityScore}`);
-					}
+							// Check if score is a number before resolving
+							if (typeof score === "number") {
+									resolve(score);
+							} else {
+									reject(new Error(`Score for ${serviceName} is not a number: ${score}`));
+							}
+					});
 			});
+	});
+
+	// Wait for all services to finish executing
+	Promise.all(servicePromises).then((scores: number[]) => {
+			const totalScore: number = scores.reduce((a: number, b: number) => a + b, 0); // Sum all scores
+			const sustainabilityScore: number = totalScore / services.length; // Calculate average
+			outputChannel.appendLine(`Sustainability score: ${sustainabilityScore}`);
+			vscode.window.showInformationMessage(`Sustainability score: ${sustainabilityScore}`);
+	}).catch((err: Error) => {
+			outputChannel.appendLine(`Error calculating aggregate score: ${err}`);
 	});
 };
 
