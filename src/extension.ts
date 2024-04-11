@@ -127,7 +127,7 @@ const printDockerLogs = (serviceName: string) => {
 		const debouncedRunDockerComposeTask = debounce(runDockerComposeTask, 10000);
 		
 		export function activate(context: vscode.ExtensionContext) {
-				vscode.window.showInformationMessage('Congratulations, your extension "ch24-test-ext" is now active!');
+				vscode.window.showInformationMessage('Congratulations, your extension "iso" is now active!');
 		
 				const watcher: vscode.FileSystemWatcher = vscode.workspace.createFileSystemWatcher('**', false, false, false);
 		
@@ -136,13 +136,13 @@ const printDockerLogs = (serviceName: string) => {
 				context.subscriptions.push(watcher);
 		
 				const disposable: vscode.Disposable = vscode.commands.registerCommand('ch24-test-ext.helloWorld', () => {
-						vscode.window.showInformationMessage('Hello World from ch24-test-ext!');
+						vscode.window.showInformationMessage('Hello World from iso!');
 				});
 		
 				context.subscriptions.push(disposable);
 		}
 
-		const calculateAndPrintAggregateScore = () => {
+		const calculateAndPrintAggregateScore = (weights = { radon: 0.3, cpd: 0.3, bandit: 0.4 }) => {
 			const services: string[] = [
 					'my-iso-radon-service',
 					'my-iso-cpd-service',
@@ -150,8 +150,8 @@ const printDockerLogs = (serviceName: string) => {
 			];
 	
 			// Map each service to a Promise
-			const servicePromises: Promise<number>[] = services.map((serviceName: string) => {
-					return new Promise<number>((resolve, reject) => {
+			const servicePromises: Promise<{ name: string, score: number }>[] = services.map((serviceName: string) => {
+					return new Promise<{ name: string, score: number }>((resolve, reject) => {
 							const command = spawn('docker-compose', ['-f', path.join(__dirname, '..', 'docker-compose.yml'), 'logs', serviceName]);
 	
 							let stdout = '';
@@ -183,7 +183,7 @@ const printDockerLogs = (serviceName: string) => {
 	
 									// Check if score is a number before resolving
 									if (typeof score === "number") {
-											resolve(score);
+											resolve({ name: serviceName, score: score });
 									} else {
 											reject(new Error(`Score for ${serviceName} is not a number: ${score}`));
 									}
@@ -192,11 +192,46 @@ const printDockerLogs = (serviceName: string) => {
 			});
 	
 			// Wait for all services to finish executing
-			Promise.all(servicePromises).then((scores: number[]) => {
-					const totalScore: number = scores.reduce((a: number, b: number) => a + b, 0); // Sum all scores
-					const sustainabilityScore: number = totalScore / services.length; // Calculate average
-					outputChannel.appendLine(`Sustainability score: ${sustainabilityScore}`);
-					vscode.window.showInformationMessage(`Sustainability score: ${sustainabilityScore}`);
+			Promise.all(servicePromises).then((scores: { name: string, score: number }[]) => {
+					let totalScore: number = 0;
+					let grade: string;
+					for (let score of scores) {
+							if (score.name === 'my-iso-radon-service') {
+									totalScore += weights.radon * score.score;
+							} else if (score.name === 'my-iso-cpd-service') {
+									totalScore += weights.cpd * score.score;
+							} else if (score.name === 'my-iso-bandit-service') {
+									totalScore += weights.bandit * score.score;
+							}
+					}
+					if (totalScore >= 93) {
+							grade = 'A';
+					} else if (totalScore >= 90) {
+							grade = 'A-';
+					} else if (totalScore >= 87) {
+							grade = 'B+';
+					} else if (totalScore >= 83) {
+							grade = 'B';
+					} else if (totalScore >= 80) {
+							grade = 'B-';
+					} else if (totalScore >= 77) {
+							grade = 'C+';
+					} else if (totalScore >= 73) {
+							grade = 'C';
+					} else if (totalScore >= 70) {
+							grade = 'C-';
+					} else if (totalScore >= 67) {
+							grade = 'D+';
+					} else if (totalScore >= 63) {
+							grade = 'D';
+					} else if (totalScore >= 60) {
+							grade = 'D-';
+					} else {
+							grade = 'F';
+					}
+					outputChannel.appendLine(`Sustainability score: ${totalScore}`);
+					outputChannel.appendLine(`Sustainability grade: ${grade}`);
+					vscode.window.showInformationMessage(`Sustainability Grade: ${grade}`);
 			}).catch((err: Error) => {
 					outputChannel.appendLine(`Error calculating aggregate score: ${err}`);
 			});

@@ -9,7 +9,7 @@
     "green-coding",
     "waste-reduction"
   ],
-  "version": "0.0.120",
+  "version": "0.0.121",
   "engines": {
     "vscode": "^1.87.0"
   },
