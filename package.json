@@ -9,7 +9,7 @@
     "green-coding",
     "waste-reduction"
   ],
-  "version": "0.0.114",
+  "version": "0.0.116",
   "engines": {
     "vscode": "^1.87.0"
   },
@@ -55,7 +55,7 @@
     "copy-bandit-run": "cp node_modules/@grnsft/if-unofficial-plugins/build/lib/iso-bandit/bandit_run.sh ./"
   },
   "devDependencies": {
-    "@grnsft/if-unofficial-plugins": "0.3.0-alpha.35",
+    "@grnsft/if-unofficial-plugins": "0.3.0-alpha.37",
     "@types/mocha": "^10.0.6",
     "@types/node": "18.x",
     "@types/vscode": "^1.87.0",

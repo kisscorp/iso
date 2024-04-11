@@ -1,6 +1,7 @@
 import * as vscode from 'vscode';
 import * as path from 'path';
 import { exec } from 'child_process';
+import { calculateRadonScore, calculateCpdScore, calculateBanditScore } from '@grnsft/if-unofficial-plugins';
 
 const outputChannel = vscode.window.createOutputChannel('Docker Logs');
 
@@ -118,100 +119,6 @@ export function activate(context: vscode.ExtensionContext) {
 
     context.subscriptions.push(disposable);
 }
-
-const calculateRadonScore = (output: string): number => {
-  const complexityScores: {[key: string]: number} = {'A': 100, 'B': 80, 'C': 60, 'D': 40, 'E': 20, 'F': 0};
-  let totalScore = 0;
-  let fileCount = 0;
-
-  // Split output into lines
-  const lines = output.split('\n');
-
-  for (const line of lines) {
-      // Check if line contains complexity score
-      const matchComplexity = line.match(/ - ([A-F])$/);
-      const matchMi = line.match(/MI: ([\d.]+)/);
-      const matchHal = line.match(/h1: (\d+)/) || line.match(/vocabulary: (\d+)/) || line.match(/length: (\d+)/);
-      const matchRaw = line.match(/LOC: (\d+)/) || line.match(/LLOC: (\d+)/) || line.match(/SLOC: (\d+)/) || line.match(/Comments: (\d+)/);
-
-      if (matchComplexity || matchMi || matchHal || matchRaw) {
-          // Increase file count
-          fileCount++;
-
-          // Get scores
-          const complexityScore = matchComplexity ? complexityScores[matchComplexity[1]] : 0;
-          const miScore = matchMi ? parseFloat(matchMi[1]) : 0;
-          const halScore = matchHal ? -parseInt(matchHal[1]) : 0;
-          const rawScore = matchRaw ? (matchRaw[0].startsWith("Comments") ? parseInt(matchRaw[1]) : -parseInt(matchRaw[1])) : 0;
-
-          // Add to total score
-          totalScore += complexityScore + miScore + halScore + rawScore;
-      }
-  }
-
-  // Calculate average score
-  const score = totalScore / fileCount;
-
-  return score;
-}
-
-const calculateCpdScore = (output: string): number => {
-	let sustainabilityScore = 100;
-	let duplicationCount = 0;
-
-	// Split output into lines
-	const lines = output.split('\n');
-
-	for (const line of lines) {
-			// Check if line contains duplication info
-			const match = line.match(/Found a (\d+) line/);
-
-			if (match) {
-					// Increase duplication count
-					duplicationCount += parseInt(match[1]);
-			}
-	}
-
-	// Deduct duplication count from sustainability score
-	sustainabilityScore -= duplicationCount;
-
-	// Ensure score is not less than 0
-	if (sustainabilityScore < 0) {
-			sustainabilityScore = 0;
-	}
-
-	return sustainabilityScore;
-}
-
-const calculateBanditScore = (output: string): number => {
-	// Initialize scores for different severity levels
-	const severityScores: {[key: string]: number} = {'Undefined': 1, 'Low': 2, 'Medium': 3, 'High': 5};
-	let sustainabilityScore = 100;
-
-	// Split output into lines
-	const lines = output.split('\n');
-
-	for (const line of lines) {
-			// Check if line contains issue info
-			const match = line.match(/(Undefined|Low|Medium|High): (\d+)/);
-
-			if (match) {
-					// Get issue severity and count
-					const severity = match[1];
-					const count = parseInt(match[2]);
-
-					// Subtract from sustainability score based on severity
-					sustainabilityScore -= severityScores[severity] * count;
-			}
-	}
-
-	// Ensure score is not less than 0
-	if (sustainabilityScore < 0) {
-			sustainabilityScore = 0;
-	}
-
-	return sustainabilityScore;
-};
 
 const calculateAndPrintAggregateScore = () => {
 	let aggregateScore = 0;
