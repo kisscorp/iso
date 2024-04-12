@@ -1,6 +1,6 @@
 import * as vscode from 'vscode';
 import * as path from 'path';
-import { spawn } from 'child_process';
+import { spawn } from './docker-utils';
 import { calculateRadonScore, calculateCpdScore, calculateBanditScore } from '@grnsft/if-unofficial-plugins';
 
 const outputChannel = vscode.window.createOutputChannel('Docker Logs');
@@ -50,7 +50,7 @@ export const runDockerComposeTask = () => {
     });
 };
 
-const printDockerLogs = (serviceName: string) => {
+export const printDockerLogs = (serviceName: string) => {
     const command = spawn('docker-compose', ['-f', path.join(__dirname, '..', 'docker-compose.yml'), 'logs', serviceName]);
 
     let stdout = '';
@@ -91,7 +91,7 @@ const printDockerLogs = (serviceName: string) => {
 				});
 		};
 		
-		const printContainerStatus = (containerName: string) => {
+		export const printContainerStatus = (containerName: string) => {
 				const command = spawn('docker', ['ps', '-a', '--filter', `name=${containerName}`]);
 		
 				let stdout = '';
@@ -142,7 +142,7 @@ const printDockerLogs = (serviceName: string) => {
 				context.subscriptions.push(disposable);
 		}
 
-		const calculateAndPrintAggregateScore = (weights = { radon: 0.3, cpd: 0.3, bandit: 0.4 }) => {
+		export const calculateAndPrintAggregateScore = (weights = { radon: 0.3, cpd: 0.3, bandit: 0.4 }) => {
 			const services: string[] = [
 					'my-iso-radon-service',
 					'my-iso-cpd-service',
