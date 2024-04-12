@@ -5,7 +5,7 @@ import { calculateRadonScore, calculateCpdScore, calculateBanditScore } from '@g
 
 const outputChannel = vscode.window.createOutputChannel('Docker Logs');
 
-const runDockerComposeTask = () => {
+export const runDockerComposeTask = () => {
     const type: string = 'shell';
     const command: string = 'docker-compose up my-iso-radon-service my-iso-cpd-service my-iso-bandit-service';
     const problemMatcher: string[] = [];
