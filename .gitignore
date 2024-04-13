@@ -14,4 +14,3 @@ Dockerfile2
 RadonDockerfile
 CpdDockerfile
 BanditDockerfile
-PylintDockerfile
