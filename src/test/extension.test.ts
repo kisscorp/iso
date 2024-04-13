@@ -138,7 +138,7 @@ suite('printContainerStatus', () => {
 
 });
 
-suite('Extension Test Suite', () => {
+suite('activate', () => {
 	let createFileSystemWatcherStub: sinon.SinonStub;
 	let registerCommandStub: sinon.SinonStub;
 	let showInformationMessageStub: sinon.SinonStub;
