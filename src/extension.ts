@@ -1,7 +1,7 @@
 import * as vscode from 'vscode';
 import * as path from 'path';
 import { spawn } from './docker-utils';
-import { calculateRadonScore, calculateCpdScore, calculateBanditScore } from '@grnsft/if-unofficial-plugins';
+import { calculateRadonScore, calculateCpdScore, calculateBanditScore, gradeIsoSustainability } from '@grnsft/if-unofficial-plugins';
 
 const outputChannel = vscode.window.createOutputChannel('Docker Logs');
 
@@ -194,7 +194,6 @@ export const printDockerLogs = (serviceName: string) => {
 			// Wait for all services to finish executing
 			Promise.all(servicePromises).then((scores: { name: string, score: number }[]) => {
 					let totalScore: number = 0;
-					let grade: string;
 					for (let score of scores) {
 							if (score.name === 'my-iso-radon-service') {
 									totalScore += weights.radon * score.score;
@@ -204,31 +203,7 @@ export const printDockerLogs = (serviceName: string) => {
 									totalScore += weights.bandit * score.score;
 							}
 					}
-					if (totalScore >= 93) {
-							grade = 'A';
-					} else if (totalScore >= 90) {
-							grade = 'A-';
-					} else if (totalScore >= 87) {
-							grade = 'B+';
-					} else if (totalScore >= 83) {
-							grade = 'B';
-					} else if (totalScore >= 80) {
-							grade = 'B-';
-					} else if (totalScore >= 77) {
-							grade = 'C+';
-					} else if (totalScore >= 73) {
-							grade = 'C';
-					} else if (totalScore >= 70) {
-							grade = 'C-';
-					} else if (totalScore >= 67) {
-							grade = 'D+';
-					} else if (totalScore >= 63) {
-							grade = 'D';
-					} else if (totalScore >= 60) {
-							grade = 'D-';
-					} else {
-							grade = 'F';
-					}
+					const grade = gradeIsoSustainability(totalScore);
 					outputChannel.appendLine(`Sustainability score: ${totalScore}`);
 					outputChannel.appendLine(`Sustainability grade: ${grade}`);
 					vscode.window.showInformationMessage(`Sustainability Grade: ${grade}`);
