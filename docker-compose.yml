@@ -18,17 +18,17 @@ services:
     build:
       context: .
       dockerfile: RadonDockerfile
-    tmpfs:
-      - /app
+    volumes:
+      - ${WORKSPACE_PATH}:/app
   my-iso-cpd-service:
     build:
       context: .
       dockerfile: CpdDockerfile
-    tmpfs:
-      - /app
+    volumes:
+      - ${WORKSPACE_PATH}:/app
   my-iso-bandit-service:
     build:
       context: .
       dockerfile: BanditDockerfile
-    tmpfs:
-      - /app
+    volumes:
+      - ${WORKSPACE_PATH}:/app
