@@ -33,86 +33,10 @@ export const runDockerComposeTask = () => {
     }
 
     vscode.tasks.executeTask(dockerTask).then(() => {
-        vscode.window.showInformationMessage('Docker container finished executing!');
-        printDockerLogs('my-python-service');
-        printDockerLogs('my-python-service2');
-        printDockerLogs('my-iso-radon-service');
-        printDockerLogs('my-iso-cpd-service');
-        printDockerLogs('my-iso-bandit-service');
-        printContainerStatus('my-python-service');
-        printContainerStatus('my-python-service2');
-        printContainerStatus('my-iso-radon-service');
-        printContainerStatus('my-iso-cpd-service');
-        printContainerStatus('my-iso-bandit-service');
-
-        // New code: calculate and print the aggregated score
-        calculateAndPrintAggregateScore();
+			vscode.window.showInformationMessage('Docker container finished executing!');
+			calculateAndPrintAggregateScore();
     });
 };
-
-export const printDockerLogs = (serviceName: string) => {
-    const command = spawn('docker-compose', ['-f', path.join(__dirname, '..', 'docker-compose.yml'), 'logs', serviceName]);
-
-    let stdout = '';
-    let stderr = '';
-
-    command.stdout.on('data', (data) => {
-        stdout += data.toString();
-    });
-
-    command.stderr.on('data', (data) => {
-        stderr += data.toString();
-    });
-
-    command.on('close', (code) => {
-        if (code !== 0) {
-            outputChannel.appendLine(`exec error: Command exited with code ${code}`);
-            return;
-        }
-
-        if (serviceName === 'my-iso-radon-service') {
-            const score = calculateRadonScore(stdout);
-            outputChannel.appendLine(`Simplicity score: ${score}`);
-        } else if (serviceName === 'my-iso-cpd-service') {
-            const score = calculateCpdScore(stdout);
-            outputChannel.appendLine(`Duplication score: ${score}`);
-        } else if (serviceName === 'my-iso-bandit-service') {
-            const score = calculateBanditScore(stdout);
-            outputChannel.appendLine(`Security score: ${score}`);
-        } else {
-            outputChannel.appendLine(`Service ${serviceName} stdout: ${stdout}`);
-        }
-
-        if (stdout.includes("Application completed successfully")) {
-            outputChannel.appendLine(`Service ${serviceName} completed successfully`);
-        } else {
-            outputChannel.appendLine(`Service ${serviceName} failed to complete successfully`);
-					}
-				});
-		};
-		
-		export const printContainerStatus = (containerName: string) => {
-				const command = spawn('docker', ['ps', '-a', '--filter', `name=${containerName}`]);
-		
-				let stdout = '';
-				let stderr = '';
-		
-				command.stdout.on('data', (data) => {
-						stdout += data.toString();
-				});
-		
-				command.stderr.on('data', (data) => {
-						stderr += data.toString();
-				});
-		
-				command.on('close', (code) => {
-						if (code !== 0) {
-								outputChannel.appendLine(`exec error: Command exited with code ${code}`);
-								return;
-						}
-						outputChannel.appendLine(`Status for ${containerName}: ${stdout}`);
-				});
-		};
 		
 		const debounce = (func: () => void, delay: number) => {
 				let timeoutId: NodeJS.Timeout | undefined;
@@ -150,8 +74,8 @@ export const printDockerLogs = (serviceName: string) => {
 			];
 	
 			// Map each service to a Promise
-			const servicePromises: Promise<{ name: string, score: number }>[] = services.map((serviceName: string) => {
-					return new Promise<{ name: string, score: number }>((resolve, reject) => {
+			const servicePromises: Promise<{ name: string, score: number, duplicateCount?: number }>[] = services.map((serviceName: string) => {
+					return new Promise<{ name: string, score: number, duplicateCount?: number }>((resolve, reject) => {
 							const command = spawn('docker-compose', ['-f', path.join(__dirname, '..', 'docker-compose.yml'), 'logs', serviceName]);
 	
 							let stdout = '';
@@ -173,17 +97,18 @@ export const printDockerLogs = (serviceName: string) => {
 									}
 	
 									let score: number = 0;
+									let duplicateCount: number = 0;
 									if (serviceName === 'my-iso-radon-service') {
 											score = calculateRadonScore(stdout);
 									} else if (serviceName === 'my-iso-cpd-service') {
-											score = calculateCpdScore(stdout);
+											[ score, duplicateCount ] = calculateCpdScore(stdout);
 									} else if (serviceName === 'my-iso-bandit-service') {
 											score = calculateBanditScore(stdout);
 									}
 	
 									// Check if score is a number before resolving
 									if (typeof score === "number") {
-											resolve({ name: serviceName, score: score });
+											resolve({ name: serviceName, score: score, duplicateCount: duplicateCount });
 									} else {
 											reject(new Error(`Score for ${serviceName} is not a number: ${score}`));
 									}

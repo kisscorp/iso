@@ -2,7 +2,7 @@ import * as vscode from 'vscode';
 import * as assert from 'assert';
 import * as sinon from 'sinon';
 import * as dockerUtils from '../docker-utils';
-import { runDockerComposeTask, printDockerLogs, printContainerStatus, activate } from '../extension';
+import { runDockerComposeTask, activate } from '../extension';
 
 // Create a sandbox to restore all stubs after each test
 const sandbox = sinon.createSandbox();
@@ -64,78 +64,6 @@ suite('runDockerComposeTask', () => {
         runDockerComposeTask();
         assert.strictEqual(process.env['WORKSPACE_PATH'], '/mock/path/1');
     });
-});
-
-suite('printDockerLogs', () => {
-	let spawnStub: sinon.SinonStub;
-	let appendLineStub: sinon.SinonStub;
-	let onStub: sinon.SinonStub;
-
-	setup(() => {
-			// Stub the vscode API
-			appendLineStub = sandbox.stub(vscode.window.createOutputChannel('your-extension-name'), 'appendLine');
-
-			// Stub the child_process.spawn method
-			spawnStub = sandbox.stub(dockerUtils, 'spawn');
-
-			// Stub the on method of the spawn return object
-			onStub = sandbox.stub();
-			spawnStub.returns({ stdout: { on: onStub }, stderr: { on: onStub }, on: onStub });
-	});
-
-	teardown(() => {
-			sandbox.restore();
-	});
-
-	test('should print docker logs', () => {
-			// Call the function with a service name
-			printDockerLogs('my-iso-radon-service');
-
-			// Check that spawn was called with the correct arguments
-			assert.ok(spawnStub.calledWith('docker-compose', ['-f', sinon.match.string, 'logs', 'my-iso-radon-service']));
-
-			// Check that on was called for stdout, stderr, and close
-			assert.strictEqual(onStub.callCount, 3);
-			assert.ok(onStub.calledWith('data'));
-			assert.ok(onStub.calledWith('close'));
-	});
-
-});
-
-suite('printContainerStatus', () => {
-	let spawnStub: sinon.SinonStub;
-	let appendLineStub: sinon.SinonStub;
-	let onStub: sinon.SinonStub;
-
-	setup(() => {
-			// Stub the vscode API
-			appendLineStub = sandbox.stub(vscode.window.createOutputChannel('your-extension-name'), 'appendLine');
-
-			// Stub the spawn method
-			spawnStub = sandbox.stub(dockerUtils, 'spawn');
-
-			// Stub the on method of the spawn return object
-			onStub = sandbox.stub();
-			spawnStub.returns({ stdout: { on: onStub }, stderr: { on: onStub }, on: onStub });
-	});
-
-	teardown(() => {
-			sandbox.restore();
-	});
-
-	test('should print container status', () => {
-			// Call the function with a container name
-			printContainerStatus('my-iso-radon-service');
-
-			// Check that spawn was called with the correct arguments
-			assert.ok(spawnStub.calledWith('docker', ['ps', '-a', '--filter', 'name=my-iso-radon-service']));
-
-			// Check that on was called for stdout, stderr, and close
-			assert.strictEqual(onStub.callCount, 3);
-			assert.ok(onStub.calledWith('data'));
-			assert.ok(onStub.calledWith('close'));
-	});
-
 });
 
 suite('activate', () => {
