@@ -1,71 +1,30 @@
-# ch24-test-ext README EDITED
+# Wasteless Coding Assistant
 
-This is the README for your extension "ch24-test-ext". After writing up a brief description, we recommend including the following sections.
+iso helps developers create efficient, secure, and less wasteful code directly within their coding environment. It aims to simplify the coding process, reduce duplication, and aid in identifying potential security issues.
 
-## Features
+## Key Features
 
-Describe specific features of your extension including screenshots of your extension in action. Image paths are relative to this README file.
+### Code Simplification
+iso analyzes your codebase to provide insights into your code's complexity. Use these insights to refactor your code into a more readable, maintainable, and efficient version. The simpler the code, the less the maintenance overhead, leading to reduced waste in terms of time and computational resources.
 
-For example if there is an image subfolder under your extension project workspace:
+### Duplication Detection
+Clean up your code with iso's duplication detection feature. iso identifies duplicate segments in your code, allowing you to eliminate redundancy, improve your software's efficiency, and minimize potential errors.
 
-\!\[feature X\]\(images/feature-x.png\)
+### Security Enhancement
+With iso, catch potential security vulnerabilities early in the development process. Early identification and resolution of security issues lead to more secure software, minimizing the need for patches and fixes down the line, and reducing waste.
 
-> Tip: Many popular extensions utilize animations. This is an excellent way to show off your extension! We recommend short, focused animations that are easy to follow.
+## Detailed Description
 
-## Requirements
+In a world increasingly conscious of our environmental footprint, creating sustainable software solutions is paramount. iso is designed to aid developers in this endeavor, promoting wasteless coding practices right from your editor.
 
-If you have any requirements or dependencies, add a section describing those and how to install and configure them.
+iso's code simplification feature provides insights into the complexity of your code, helping you streamline it for efficiency. This results in reduced maintenance overhead and computational resource usage.
 
-## Extension Settings
+iso also targets code duplication, a common issue in large codebases. By identifying and eliminating duplicates, iso helps you create cleaner, more efficient code.
 
-Include if your extension adds any VS Code settings through the `contributes.configuration` extension point.
+Additionally, iso helps identify potential security vulnerabilities early in the development process. This proactive approach to security leads to more robust software and reduces waste associated with patches and fixes.
 
-For example:
+Join the wasteless coding movement with iso, your go-to assistant for creating efficient and less wasteful software.
 
-This extension contributes the following settings:
+## Note
 
-* `myExtension.enable`: Enable/disable this extension.
-* `myExtension.thing`: Set to `blah` to do something.
-
-## Known Issues
-
-Calling out known issues can help limit users opening duplicate issues against your extension.
-
-## Release Notes
-
-Users appreciate release notes as you update your extension.
-
-### 1.0.0
-
-Initial release of ...
-
-### 1.0.1
-
-Fixed issue #.
-
-### 1.1.0
-
-Added features X, Y, and Z.
-
----
-
-## Following extension guidelines
-
-Ensure that you've read through the extensions guidelines and follow the best practices for creating your extension.
-
-* [Extension Guidelines](https://code.visualstudio.com/api/references/extension-guidelines)
-
-## Working with Markdown
-
-You can author your README using Visual Studio Code. Here are some useful editor keyboard shortcuts:
-
-* Split the editor (`Cmd+\` on macOS or `Ctrl+\` on Windows and Linux).
-* Toggle preview (`Shift+Cmd+V` on macOS or `Shift+Ctrl+V` on Windows and Linux).
-* Press `Ctrl+Space` (Windows, Linux, macOS) to see a list of Markdown snippets.
-
-## For more information
-
-* [Visual Studio Code's Markdown Support](http://code.visualstudio.com/docs/languages/markdown)
-* [Markdown Syntax Reference](https://help.github.com/articles/markdown-basics/)
-
-**Enjoy!**
+While iso initially supports Python, our goal is to extend its capabilities to support every programming language. We will continually refine iso and introduce new features based on user feedback and evolving needs.
