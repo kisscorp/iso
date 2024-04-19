@@ -1,0 +1,21 @@
+# Start from a base Python 3.8 image
+FROM python:3.8-slim
+
+# Set the working directory in the container to /app
+WORKDIR /app
+
+RUN mkdir /scripts
+
+# Install Bandit
+RUN pip install bandit
+
+RUN echo 'print("Application completed successfully")' > /scripts/hello.py
+
+# Copy the shell script to the Docker image
+COPY bandit_run.sh /scripts/run.sh
+
+# Make the shell script executable
+RUN chmod +x /scripts/run.sh
+
+# Run the shell script when the container launches
+CMD ["/scripts/run.sh"]

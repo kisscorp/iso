@@ -5,12 +5,12 @@ node_modules
 *.vsix
 
 # Run files
-*_run.sh
+# *_run.sh
 
 # Copied docker files
-Dockerfile
-Dockerfile.csharp
-Dockerfile2
-RadonDockerfile
-CpdDockerfile
-BanditDockerfile
+# Dockerfile
+# Dockerfile.csharp
+# Dockerfile2
+# RadonDockerfile
+# CpdDockerfile
+# BanditDockerfile

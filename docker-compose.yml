@@ -19,16 +19,22 @@ services:
       context: .
       dockerfile: RadonDockerfile
     volumes:
-      - ${WORKSPACE_PATH}:/app
+      - ${WORKSPACE_PATH}:/initial-data
+    tmpfs:
+      - /app
   my-iso-cpd-service:
     build:
       context: .
       dockerfile: CpdDockerfile
     volumes:
-      - ${WORKSPACE_PATH}:/app
+      - ${WORKSPACE_PATH}:/initial-data
+    tmpfs:
+      - /app
   my-iso-bandit-service:
     build:
       context: .
       dockerfile: BanditDockerfile
     volumes:
-      - ${WORKSPACE_PATH}:/app
+      - ${WORKSPACE_PATH}:/initial-data
+    tmpfs:
+      - /app

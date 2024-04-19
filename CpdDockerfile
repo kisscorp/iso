@@ -1,0 +1,31 @@
+# Start from a base Java 8 image
+FROM openjdk:8-jdk-slim
+
+# Set the working directory in the container to /app
+WORKDIR /app
+
+RUN mkdir /scripts
+
+# Install PMD
+RUN apt-get update \
+    && apt-get install -y wget unzip \
+    && wget https://github.com/pmd/pmd/releases/download/pmd_releases%2F6.30.0/pmd-bin-6.30.0.zip \
+    && unzip pmd-bin-6.30.0.zip \
+    && rm pmd-bin-6.30.0.zip \
+    && mv pmd-bin-6.30.0 /usr/local \
+    && ln -s /usr/local/pmd-bin-6.30.0/bin/run.sh /usr/local/bin/pmd
+
+# Run PMD CPD when the container launches
+# CMD ["pmd", "cpd", "--minimum-tokens", "100", "--files", "/app"]
+
+RUN echo 'public class HelloWorld {\n public static void main(String[] args) {\n System.out.println("Application completed successfully");\n}\n}' > /scripts/HelloWorld.java
+# RUN echo 'import time\n\ndef greet_and_sleep():\n    print("Hello, World!")\n    print("Application completed successfully")\n    time.sleep(10)\n\ngreet_and_sleep()' > hello.py
+
+# Copy the shell script to the Docker image
+COPY cpd_run.sh /scripts/run.sh
+
+# Make the shell script executable
+RUN chmod +x /scripts/run.sh
+
+# Run the shell script when the container launches
+CMD ["/scripts/run.sh"]

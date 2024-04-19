@@ -1,0 +1,27 @@
+# Use an official Python runtime as a parent image
+FROM python:3.7-slim
+
+# Set the working directory in the container to /app
+WORKDIR /app
+
+# Add the current directory contents into the container at /app
+# ADD . /app
+
+# Install Radon
+RUN pip install radon
+
+# Create the scripts directory
+RUN mkdir /scripts
+
+# Create a simple Python script that includes a function
+RUN echo 'print("Application completed successfully")' > /scripts/hello.py
+# RUN echo 'import time\n\ndef greet_and_sleep():\n    print("Hello, World!")\n    print("Application completed successfully")\n    time.sleep(10)\n\ngreet_and_sleep()' > hello.py
+
+# Copy the shell script to the Docker image
+COPY radon_run.sh /scripts/run.sh
+
+# Make the shell script executable
+RUN chmod +x /scripts/run.sh
+
+# Run the shell script when the container launches
+CMD ["/scripts/run.sh"]

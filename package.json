@@ -9,7 +9,7 @@
     "green-coding",
     "waste-reduction"
   ],
-  "version": "0.0.133",
+  "version": "0.0.145",
   "engines": {
     "vscode": "^1.87.0"
   },
@@ -36,7 +36,7 @@
     "url": "https://github.com/kisscorp/iso.git"
   },
   "scripts": {
-    "vscode:prepublish": "npm run package && npm run copy-radon-dockerfile && npm run copy-radon-run && npm run copy-cpd-dockerfile && npm run copy-cpd-run && npm run copy-bandit-dockerfile && npm run copy-bandit-run",
+    "vscode:prepublish": "npm run package",
     "compile": "webpack",
     "watch": "webpack --watch",
     "package": "webpack --mode production --devtool hidden-source-map",
@@ -44,16 +44,9 @@
     "watch-tests": "tsc -p . -w --outDir out",
     "pretest": "npm run compile-tests && npm run compile && npm run lint",
     "lint": "eslint src --ext ts",
-    "test": "vscode-test",
-    "copy-radon-dockerfile": "cp node_modules/@grnsft/if-unofficial-plugins/build/lib/iso-radon/RadonDockerfile ./",
-    "copy-radon-run": "cp node_modules/@grnsft/if-unofficial-plugins/build/lib/iso-radon/radon_run.sh ./",
-    "copy-cpd-dockerfile": "cp node_modules/@grnsft/if-unofficial-plugins/build/lib/iso-cpd/CpdDockerfile ./",
-    "copy-cpd-run": "cp node_modules/@grnsft/if-unofficial-plugins/build/lib/iso-cpd/cpd_run.sh ./",
-    "copy-bandit-dockerfile": "cp node_modules/@grnsft/if-unofficial-plugins/build/lib/iso-bandit/BanditDockerfile ./",
-    "copy-bandit-run": "cp node_modules/@grnsft/if-unofficial-plugins/build/lib/iso-bandit/bandit_run.sh ./"
+    "test": "vscode-test"
   },
   "devDependencies": {
-    "@grnsft/if-unofficial-plugins": "0.3.0-alpha.44",
     "@types/mocha": "^10.0.6",
     "@types/node": "18.x",
     "@types/sinon": "^17.0.3",
